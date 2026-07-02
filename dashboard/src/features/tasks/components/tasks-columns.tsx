@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { supabase } from '@/lib/supabase'
-import { labels, priorities, statuses, severityToBadgeVariant } from '../data/data'
+import { statuses, severityToBadgeVariant } from '../data/data'
 import { type Task } from '../data/schema'
 import { DataTableRowActions } from './data-table-row-actions'
 
@@ -66,7 +66,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
     ),
     cell: ({ row }) => <div className='w-20'>{row.getValue('id')}</div>,
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: true,
   },
   {
     accessorKey: 'title',
@@ -78,10 +78,8 @@ export const tasksColumns: ColumnDef<Task>[] = [
       tdClassName: 'ps-4',
     },
     cell: ({ row }) => {
-      const label = labels.find((l) => l.value === row.original.label)
       return (
         <div className='flex space-x-2'>
-          {label && <Badge variant='outline'>{label.label}</Badge>}
           <span className='truncate font-medium'>{row.getValue('title')}</span>
         </div>
       )
@@ -165,28 +163,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
     enableSorting: false,
     enableHiding: true,
   },
-  {
-    accessorKey: 'priority',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Priority' />
-    ),
-    meta: { className: 'ps-1', tdClassName: 'ps-3' },
-    cell: ({ row }) => {
-      const priority = priorities.find(
-        (p) => p.value === row.getValue('priority')
-      )
-      if (!priority) return null
-      return (
-        <div className='flex items-center gap-2'>
-          {priority.icon && (
-            <priority.icon className='size-4 text-muted-foreground' />
-          )}
-          <span>{priority.label}</span>
-        </div>
-      )
-    },
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
-  },
+
   {
     id: 'actions',
     cell: ({ row }) => <DataTableRowActions row={row} />,

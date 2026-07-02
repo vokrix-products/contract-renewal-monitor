@@ -8,15 +8,23 @@ import type { LucideIcon } from 'lucide-react'
 // 'dispatch'   — no upload, create-driven; tasks table shows active jobs
 export const PRODUCT_ARCHETYPE = 'extraction' as 'extraction' | 'monitor' | 'report' | 'dispatch'
 
+
+// PRODUCT_CUSTOMIZE: set these per product.
+export const RECORDS_LABEL = 'Contracts'           // sidebar + page heading: 'Contracts', 'Claims', 'Invoices'
+export const RECORDS_SUBTITLE = 'Your vendor contracts and renewal deadlines.'  // page subtitle
+export const FILTER_PLACEHOLDER = 'Filter by vendor name...'  // search box placeholder
+export const SHOW_CREATE_BUTTON = false           // true only for dispatch archetype
+export const SHOW_IMPORT_BUTTON = false           // true only if CSV import is relevant
+
 // Derived automatically — do not edit below this line
 const ARCHETYPE_CONFIG: Record<
   typeof PRODUCT_ARCHETYPE,
   { tasksLabel: string; tasksIcon: LucideIcon; showTasks: boolean }
 > = {
-  extraction: { tasksLabel: 'Records',    tasksIcon: ListTodo,       showTasks: true  },
-  monitor:    { tasksLabel: 'Exceptions', tasksIcon: AlertTriangle,  showTasks: true  },
-  report:     { tasksLabel: 'Records',    tasksIcon: ListTodo,       showTasks: false },
-  dispatch:   { tasksLabel: 'Jobs',       tasksIcon: Briefcase,      showTasks: true  },
+  extraction: { tasksLabel: RECORDS_LABEL,    tasksIcon: ListTodo,       showTasks: true  },
+  monitor:    { tasksLabel: RECORDS_LABEL, tasksIcon: AlertTriangle,  showTasks: true  },
+  report:     { tasksLabel: RECORDS_LABEL,    tasksIcon: ListTodo,       showTasks: false },
+  dispatch:   { tasksLabel: RECORDS_LABEL,       tasksIcon: Briefcase,      showTasks: true  },
 }
 
 export const { tasksLabel: TASKS_NAV_LABEL, tasksIcon: TASKS_NAV_ICON, showTasks: SHOW_TASKS_NAV } =

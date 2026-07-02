@@ -9,7 +9,7 @@ import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import { TasksProvider } from './components/tasks-provider'
 import { TasksTable } from './components/tasks-table'
 import { useTasks } from './data/tasks'
-import { TASKS_NAV_LABEL, PRODUCT_ARCHETYPE } from '@/product-config'
+import { RECORDS_LABEL, RECORDS_SUBTITLE } from '@/product-config'
 
 export function Tasks() {
   const { data: tasks, isLoading, error } = useTasks()
@@ -25,13 +25,9 @@ export function Tasks() {
       <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
         <div className='flex flex-wrap items-end justify-between gap-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>{TASKS_NAV_LABEL}</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{RECORDS_LABEL}</h2>
             <p className='text-muted-foreground'>
-              {PRODUCT_ARCHETYPE === 'monitor'
-                ? 'Flagged items that need your attention.'
-                : PRODUCT_ARCHETYPE === 'dispatch'
-                  ? 'Active jobs and their current status.'
-                  : 'All records processed by this product.'}
+              {RECORDS_SUBTITLE}
             </p>
           </div>
           <TasksPrimaryButtons />

@@ -30,6 +30,10 @@ export function Overview() {
       <BarChart data={data.statusCounts}>
         <XAxis
           dataKey='status'
+          tickFormatter={(value) => {
+            const def = statuses.find((s) => s.value === value)
+            return def?.label ?? value
+          }}
           stroke='#888888'
           fontSize={12}
           tickLine={false}
