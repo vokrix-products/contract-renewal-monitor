@@ -13,7 +13,7 @@ from compute_status import compute_status, earliest_date
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 PRODUCT_ID = os.environ.get("PRODUCT_ID", "contract-renewal-monitor")
-JOB_TYPE = "contract_audit"
+JOB_TYPE = "process_upload"
 POLL_INTERVAL = 60
 
 HEADERS = {
