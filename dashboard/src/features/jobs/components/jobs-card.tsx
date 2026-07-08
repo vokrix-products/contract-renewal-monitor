@@ -10,11 +10,63 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
   useJobs,
   useUploadJob,
   downloadJobResult,
   type Job,
 } from '../data/jobs'
+
+const BILLING_WEBHOOK_URL = 'https://vokrix-billing-webhook-production.up.railway.app'
+const PRICE_ID = 'price_1Tqz3T2c9uGCcgMScC87W7Ws'
+const PRODUCT_ID_VALUE = import.meta.env.VITE_PRODUCT_ID as string
+
+async function openCheckout() {
+  const res = await fetch(`${BILLING_WEBHOOK_URL}/create-checkout-session`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      price_id: PRICE_ID,
+      product_id: PRODUCT_ID_VALUE,
+      success_url: window.location.origin + '?upgraded=true',
+      cancel_url: window.location.href,
+    }),
+  })
+  const data = await res.json()
+  if (data.checkout_url) window.location.href = data.checkout_url
+}
+
+function PaywallModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>You've used your 3 free contracts</DialogTitle>
+          <DialogDescription>
+            Upgrade to monitor unlimited contracts and get renewal alerts automatically.
+          </DialogDescription>
+        </DialogHeader>
+        <div className='space-y-4 pt-2'>
+          <p className='text-sm text-muted-foreground'>
+            $49/month — cancel anytime.
+          </p>
+          <Button className='w-full' onClick={openCheckout}>
+            Upgrade now
+          </Button>
+          <Button variant='outline' className='w-full' onClick={onClose}>
+            Maybe later
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 function statusBadgeVariant(
   status: string
@@ -56,7 +108,7 @@ const SHOW_UPLOAD = PRODUCT_ARCHETYPE === 'extraction' || PRODUCT_ARCHETYPE === 
 const MULTI_FILE = false
 
 export function JobsCard() {
-  const { uploadFile, uploadFiles, uploading, error } = useUploadJob()
+  const { uploadFile, uploadFiles, uploading, error, trialLimitReached, setTrialLimitReached } = useUploadJob()
   const { data: jobs, isLoading } = useJobs()
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -83,6 +135,8 @@ export function JobsCard() {
   }
 
   return (
+    <>
+    <PaywallModal open={trialLimitReached} onClose={() => setTrialLimitReached(false)} />
     <Card>
       <CardHeader>
         <CardTitle>
@@ -175,5 +229,6 @@ export function JobsCard() {
         </div>
       </CardContent>
     </Card>
+    </>
   )
 }
