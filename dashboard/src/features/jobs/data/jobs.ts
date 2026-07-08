@@ -43,10 +43,11 @@ const TRIAL_LIMIT = 3
 
 async function getRecordCount(userId: string): Promise<number> {
   const { count, error } = await supabase
-    .from('records')
+    .from('jobs')
     .select('*', { count: 'exact', head: true })
     .eq('product_id', PRODUCT_ID)
     .eq('customer_id', userId)
+    .in('status', ['pending', 'processing', 'completed'])
   if (error) throw error
   return count ?? 0
 }
