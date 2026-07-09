@@ -33,8 +33,8 @@ export function SignUp() {
     <div className='flex min-h-svh items-center justify-center p-4'>
       <div className='w-full max-w-sm space-y-6'>
         <div className='space-y-1 text-center'>
-          <h1 className='text-2xl font-semibold'>Start free trial</h1>
-          <p className='text-sm text-muted-foreground'>Monitor up to 3 contracts free. No credit card required.</p>
+          <h1 className='text-2xl font-semibold'>Never miss a contract renewal</h1>
+          <p className='text-sm text-muted-foreground'>Track expiring contracts automatically. Free for your first 3 — no credit card needed.</p>
         </div>
         <Button variant='outline' className='w-full' onClick={handleGoogle} type='button'>
           <svg className='mr-2 h-4 w-4' viewBox='0 0 24 24'>
