@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-export function SignIn() {
+export function SignUp() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -23,16 +23,19 @@ export function SignIn() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+    const { error: signUpError } = await supabase.auth.signUp({ email, password })
     setLoading(false)
-    if (signInError) { setError(signInError.message); return }
+    if (signUpError) { setError(signUpError.message); return }
     navigate({ to: '/' })
   }
 
   return (
     <div className='flex min-h-svh items-center justify-center p-4'>
       <div className='w-full max-w-sm space-y-6'>
-        <h1 className='text-center text-2xl font-semibold'>Sign in</h1>
+        <div className='space-y-1 text-center'>
+          <h1 className='text-2xl font-semibold'>Start free trial</h1>
+          <p className='text-sm text-muted-foreground'>Monitor up to 3 contracts free. No credit card required.</p>
+        </div>
         <Button variant='outline' className='w-full' onClick={handleGoogle} type='button'>
           <svg className='mr-2 h-4 w-4' viewBox='0 0 24 24'>
             <path d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z' fill='#4285F4'/>
@@ -53,16 +56,16 @@ export function SignIn() {
           </div>
           <div className='space-y-2'>
             <Label htmlFor='password'>Password</Label>
-            <Input id='password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <Input id='password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
           </div>
           {error && <p className='text-sm text-destructive'>{error}</p>}
           <Button type='submit' className='w-full' disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? 'Creating account...' : 'Start free trial'}
           </Button>
         </form>
         <p className='text-center text-sm text-muted-foreground'>
-          No account?{'  '}
-          <Link to={'/sign-up' as any} className='underline'>Start free trial</Link>
+          Already have an account?{' '}
+          <Link to={'/sign-in' as any} className='underline'>Sign in</Link>
         </p>
       </div>
     </div>
