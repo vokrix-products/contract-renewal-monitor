@@ -21,7 +21,7 @@ import { useDashboardStats } from './data/dashboard'
 import { supabase } from '@/lib/supabase'
 
 // PRODUCT_CUSTOMIZE: card titles/icons below describe generic record
-// tracking. Rename "Records" / "Needs Attention" to match this product's
+// tracking. Rename "Records" / "Expiring Soon" to match this product's
 // domain (e.g. "Certificates" / "Expired").
 export function Dashboard() {
   const { data, isLoading } = useDashboardStats()
@@ -75,7 +75,7 @@ export function Dashboard() {
             <Card>
               <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                 <CardTitle className='text-sm font-medium'>
-                  Total Records
+                  Total Contracts
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -87,7 +87,7 @@ export function Dashboard() {
             <Card>
               <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                 <CardTitle className='text-sm font-medium'>
-                  Needs Attention
+                  Expiring Soon
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -99,7 +99,7 @@ export function Dashboard() {
             <Card>
               <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                 <CardTitle className='text-sm font-medium'>
-                  Added This Week
+                  Uploaded This Week
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -121,7 +121,7 @@ export function Dashboard() {
             <Card className='col-span-1 lg:col-span-3'>
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Latest records added</CardDescription>
+                <CardDescription>Recently uploaded contracts</CardDescription>
               </CardHeader>
               <CardContent>
                 <RecentActivity />

@@ -145,8 +145,8 @@ export function JobsCard() {
         {SHOW_UPLOAD && (
           <CardDescription>
             {MULTI_FILE
-              ? 'Drop your files here to start processing. You’ll see them appear below as they work through the queue.'
-              : 'Drop a file to start processing. You’ll see it appear below as it works through the queue.'}
+              ? 'Drop your contract files here. We’ll extract the vendor name, expiry date, and renewal terms automatically.'
+              : 'Upload any contract PDF or document. We’ll extract the renewal date and alert you before it expires.'}
           </CardDescription>
         )}
       </CardHeader>
@@ -188,7 +188,7 @@ export function JobsCard() {
           )}
           {!isLoading && jobs && jobs.length === 0 && (
             <p className='text-sm text-muted-foreground'>
-              No uploads yet. Files you upload will appear here.
+              No contracts uploaded yet. Upload a contract PDF and we’ll extract the renewal date automatically.
             </p>
           )}
           {jobs?.slice(0, 5).map((job) => (
