@@ -71,7 +71,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
   {
     accessorKey: 'title',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Name' />
+      <DataTableColumnHeader column={column} title='Vendor / Contract' />
     ),
     meta: {
       className: 'ps-1 max-w-0 w-2/3',
