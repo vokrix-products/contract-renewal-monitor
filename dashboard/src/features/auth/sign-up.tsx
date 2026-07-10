@@ -26,6 +26,15 @@ export function SignUp() {
     const { error: signUpError } = await supabase.auth.signUp({ email, password })
     setLoading(false)
     if (signUpError) { setError(signUpError.message); return }
+    fetch('https://web-production-6adc6.up.railway.app/send-welcome', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        product_name: import.meta.env.VITE_PRODUCT_NAME,
+        dashboard_url: window.location.origin,
+      }),
+    }).catch(() => {})
     navigate({ to: '/' })
   }
 
