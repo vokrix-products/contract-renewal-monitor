@@ -24,7 +24,7 @@ import {
 } from '../data/jobs'
 
 const BILLING_WEBHOOK_URL = 'https://web-production-6adc6.up.railway.app'
-const PRICE_ID = 'price_1Tr09B2c9uGCcgMSUSv6Xt2p'
+const PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID ?? 'price_1Ts0IF2c9uGCcgMSl03OlU5n'
 const PRODUCT_ID_VALUE = import.meta.env.VITE_PRODUCT_ID as string
 
 async function openCheckout() {
