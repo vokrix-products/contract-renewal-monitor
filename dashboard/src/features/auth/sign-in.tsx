@@ -1,16 +1,15 @@
 import { useState } from 'react'
-import { useNavigate, Link } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 export function SignIn() {
-  const navigate = useNavigate()
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleGoogle = async () => {
     await supabase.auth.signInWithOAuth({
@@ -23,10 +22,25 @@ export function SignIn() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.origin + '/' },
+    })
     setLoading(false)
-    if (signInError) { setError(signInError.message); return }
-    navigate({ to: '/' })
+    if (otpError) { setError(otpError.message); return }
+    setSent(true)
+  }
+
+  if (sent) {
+    return (
+      <div className='flex min-h-svh items-center justify-center p-4'>
+        <div className='w-full max-w-sm space-y-4 text-center'>
+          <h1 className='text-2xl font-semibold'>Check your email</h1>
+          <p className='text-sm text-muted-foreground'>We sent a magic link to <strong>{email}</strong>. Click it to sign in.</p>
+          <button onClick={() => setSent(false)} className='text-sm text-muted-foreground underline'>Use a different email</button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -51,17 +65,13 @@ export function SignIn() {
             <Label htmlFor='email'>Email</Label>
             <Input id='email' type='email' value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
-          <div className='space-y-2'>
-            <Label htmlFor='password'>Password</Label>
-            <Input id='password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} required />
-          </div>
           {error && <p className='text-sm text-destructive'>{error}</p>}
           <Button type='submit' className='w-full' disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? 'Sending link...' : 'Send magic link'}
           </Button>
         </form>
         <p className='text-center text-sm text-muted-foreground'>
-          No account?{'  '}
+          No account?{' '}
           <Link to={'/sign-up' as any} className='underline'>Start free trial</Link>
         </p>
       </div>

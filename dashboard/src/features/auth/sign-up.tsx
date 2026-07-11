@@ -1,16 +1,15 @@
 import { useState } from 'react'
-import { useNavigate, Link } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 export function SignUp() {
-  const navigate = useNavigate()
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleGoogle = async () => {
     await supabase.auth.signInWithOAuth({
@@ -23,9 +22,12 @@ export function SignUp() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const { error: signUpError } = await supabase.auth.signUp({ email, password })
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.origin + '/' },
+    })
     setLoading(false)
-    if (signUpError) { setError(signUpError.message); return }
+    if (otpError) { setError(otpError.message || 'Something went wrong. Try again.'); return }
     fetch('https://web-production-6adc6.up.railway.app/send-welcome', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -35,15 +37,27 @@ export function SignUp() {
         dashboard_url: window.location.origin,
       }),
     }).catch(() => {})
-    navigate({ to: '/' })
+    setSent(true)
+  }
+
+  if (sent) {
+    return (
+      <div className='flex min-h-svh items-center justify-center p-4'>
+        <div className='w-full max-w-sm space-y-4 text-center'>
+          <h1 className='text-2xl font-semibold'>Check your email</h1>
+          <p className='text-sm text-muted-foreground'>We sent a magic link to <strong>{email}</strong>. Click it to get started.</p>
+          <button onClick={() => setSent(false)} className='text-sm text-muted-foreground underline'>Use a different email</button>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className='flex min-h-svh items-center justify-center p-4'>
       <div className='w-full max-w-sm space-y-6'>
         <div className='space-y-1 text-center'>
-          <h1 className='text-2xl font-semibold'>Never miss a contract renewal</h1>
-          <p className='text-sm text-muted-foreground'>Track expiring contracts automatically. Free for your first 3 — no credit card needed.</p>
+          <h1 className='text-2xl font-semibold'>{import.meta.env.VITE_PRODUCT_NAME || 'Get started'}</h1>
+          <p className='text-sm text-muted-foreground'>{import.meta.env.VITE_PRODUCT_DESCRIPTION || 'Free for your first 3 — no credit card needed.'}</p>
         </div>
         <Button variant='outline' className='w-full' onClick={handleGoogle} type='button'>
           <svg className='mr-2 h-4 w-4' viewBox='0 0 24 24'>
@@ -63,13 +77,9 @@ export function SignUp() {
             <Label htmlFor='email'>Email</Label>
             <Input id='email' type='email' value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
-          <div className='space-y-2'>
-            <Label htmlFor='password'>Password</Label>
-            <Input id='password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
-          </div>
           {error && <p className='text-sm text-destructive'>{error}</p>}
           <Button type='submit' className='w-full' disabled={loading}>
-            {loading ? 'Creating account...' : 'Start free trial'}
+            {loading ? 'Sending link...' : 'Start free trial'}
           </Button>
         </form>
         <p className='text-center text-sm text-muted-foreground'>
