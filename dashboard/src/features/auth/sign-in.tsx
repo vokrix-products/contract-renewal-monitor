@@ -14,7 +14,7 @@ export function SignIn() {
   const handleGoogle = async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + '/' },
+      options: { redirectTo: window.location.origin + '/auth-callback' },
     })
   }
 
@@ -72,7 +72,7 @@ export function SignIn() {
         </form>
         <p className='text-center text-sm text-muted-foreground'>
           No account?{' '}
-          <Link to={'/sign-up' as any} className='underline'>Start free trial</Link>
+          <Link to='/sign-up' className='underline'>Start free trial</Link>
         </p>
       </div>
     </div>

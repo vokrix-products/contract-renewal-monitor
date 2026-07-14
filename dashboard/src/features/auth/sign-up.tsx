@@ -14,7 +14,7 @@ export function SignUp() {
   const handleGoogle = async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + '/' },
+      options: { redirectTo: window.location.origin + '/auth-callback' },
     })
   }
 
@@ -24,19 +24,10 @@ export function SignUp() {
     setLoading(true)
     const { error: otpError } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: window.location.origin + '/' },
+      options: { emailRedirectTo: window.location.origin + '/auth-callback' },
     })
     setLoading(false)
     if (otpError) { setError(otpError.message || 'Something went wrong. Try again.'); return }
-    fetch('https://web-production-6adc6.up.railway.app/send-welcome', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        product_name: import.meta.env.VITE_PRODUCT_NAME,
-        dashboard_url: window.location.origin,
-      }),
-    }).catch(() => {})
     setSent(true)
   }
 
@@ -56,8 +47,8 @@ export function SignUp() {
     <div className='flex min-h-svh items-center justify-center p-4'>
       <div className='w-full max-w-sm space-y-6'>
         <div className='space-y-1 text-center'>
-          <h1 className='text-2xl font-semibold'>{import.meta.env.VITE_PRODUCT_NAME || 'Get started'}</h1>
-          <p className='text-sm text-muted-foreground'>{import.meta.env.VITE_PRODUCT_DESCRIPTION || 'Free for your first 3 — no credit card needed.'}</p>
+          <h1 className='text-2xl font-semibold'>{(import.meta.env.VITE_PRODUCT_NAME as string) || 'Get started'}</h1>
+          <p className='text-sm text-muted-foreground'>{(import.meta.env.VITE_PRODUCT_DESCRIPTION as string) || 'Free for your first 3 — no credit card needed.'}</p>
         </div>
         <Button variant='outline' className='w-full' onClick={handleGoogle} type='button'>
           <svg className='mr-2 h-4 w-4' viewBox='0 0 24 24'>
@@ -84,7 +75,7 @@ export function SignUp() {
         </form>
         <p className='text-center text-sm text-muted-foreground'>
           Already have an account?{' '}
-          <Link to={'/sign-in' as any} className='underline'>Sign in</Link>
+          <Link to='/sign-in' className='underline'>Sign in</Link>
         </p>
       </div>
     </div>
